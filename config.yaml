@@ -1,0 +1,50 @@
+# Configuration for Diabetic Retinopathy Detection Pipeline
+
+data:
+  image_size: 512
+  normalize: true
+  batch_size: 32
+  num_workers: 4
+  train_split: 0.7
+  val_split: 0.15
+  test_split: 0.15
+  data_dir: "./data/raw"
+
+model:
+  model_name: "efficientnet_b4"
+  num_classes: 5
+  pretrained: true
+  dropout: 0.5
+  learning_rate: 0.001
+  weight_decay: 0.0001
+  epochs: 50
+  early_stopping_patience: 10
+
+mlops:
+  checkpoint_dir: "./models/checkpoints"
+  logs_dir: "./logs"
+  mlflow_tracking_uri: "http://localhost:5000"
+  mlflow_experiment_name: "retinopathy-detection"
+  save_best_only: true
+  
+training:
+  device: "cuda"
+  mixed_precision: true
+  gradient_accumulation_steps: 1
+  gradient_clip_val: 1.0
+  seed: 42
+
+inference:
+  model_path: "./models/checkpoints/best_model.pt"
+  confidence_threshold: 0.7
+  
+api:
+  host: "0.0.0.0"
+  port: 8000
+  debug: false
+  workers: 4
+
+monitoring:
+  prometheus_port: 8001
+  enable_wandb: true
+  wandb_project: "retinopathy-detection"
